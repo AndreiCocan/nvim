@@ -80,6 +80,7 @@ require('snacks').setup {
     enabled = true,
     sources = {
       explorer = {
+        exclude = { '*.swp', '*.swo', '*.swn', '*.swm' },
         hidden = true,
         ignored = true,
       },
