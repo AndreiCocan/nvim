@@ -76,7 +76,15 @@ require('snacks').setup {
   input = { enabled = true },
   lazygit = { enabled = true },
   notifier = { enabled = true },
-  picker = { enabled = true },
+  picker = {
+    enabled = true,
+    sources = {
+      explorer = {
+        hidden = true,
+        ignored = true,
+      },
+    },
+  },
   quickfile = { enabled = true },
   scope = { enabled = true },
   statuscolumn = {
