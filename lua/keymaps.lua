@@ -235,10 +235,30 @@ end, { desc = 'Terminal New' })
 -- exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', [[<C-\><C-n>]], { desc = 'Exit Terminal Mode' })
 
+local terminal_nav_apps = {
+  k9s = true,
+  lazydocker = true,
+  lazygit = true,
+}
+
+local function terminal_cmd_name()
+  local terminal = vim.b.snacks_terminal
+  local cmd = terminal and terminal.cmd
+  if type(cmd) == 'table' then cmd = cmd[1] end
+  return type(cmd) == 'string' and vim.fn.fnamemodify(cmd, ':t') or nil
+end
+
+local function terminal_nav(lhs, rhs)
+  return function()
+    if terminal_nav_apps[terminal_cmd_name()] then return lhs end
+    return rhs
+  end
+end
+
 -- window navigation from terminal mode (no <Esc> needed)
 vim.keymap.set('t', '<C-h>', [[<C-\><C-n><C-w>h]], { desc = 'Go to Left Window' })
-vim.keymap.set('t', '<C-j>', [[<C-\><C-n><C-w>j]], { desc = 'Go to Lower Window' })
-vim.keymap.set('t', '<C-k>', [[<C-\><C-n><C-w>k]], { desc = 'Go to Upper Window' })
+vim.keymap.set('t', '<C-j>', terminal_nav('<C-j>', [[<C-\><C-n><C-w>j]]), { desc = 'Go to Lower Window', expr = true })
+vim.keymap.set('t', '<C-k>', terminal_nav('<C-k>', [[<C-\><C-n><C-w>k]]), { desc = 'Go to Upper Window', expr = true })
 vim.keymap.set('t', '<C-l>', [[<C-\><C-n><C-w>l]], { desc = 'Go to Right Window' })
 
 -- ============================================================================
