@@ -55,6 +55,37 @@ vim.keymap.set('n', 'gco', 'o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>', { desc = 
 vim.keymap.set('n', 'gcO', 'O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>', { desc = 'Add Comment Above' })
 
 -- ============================================================================
+-- AI Completion
+-- ============================================================================
+
+local function supermaven_accept(fallback)
+  return function()
+    local suggestion = require 'supermaven-nvim.completion_preview'
+    if suggestion.has_suggestion() then
+      suggestion.on_accept_suggestion()
+      return ''
+    end
+    return fallback
+  end
+end
+
+local function supermaven_accept_word(fallback)
+  return function()
+    local suggestion = require 'supermaven-nvim.completion_preview'
+    if suggestion.has_suggestion() then
+      suggestion.on_accept_suggestion_word()
+      return ''
+    end
+    return fallback
+  end
+end
+
+vim.keymap.set('i', '<C-l>', supermaven_accept '<C-l>', { desc = 'Supermaven Accept', expr = true })
+vim.keymap.set('i', '<C-j>', supermaven_accept_word '<C-j>', { desc = 'Supermaven Accept Word', expr = true })
+vim.keymap.set('i', '<C-]>', function() require('supermaven-nvim.completion_preview').on_dispose_inlay() end,
+  { desc = 'Supermaven Clear' })
+
+-- ============================================================================
 -- Windows
 -- ============================================================================
 
