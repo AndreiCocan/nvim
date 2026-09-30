@@ -21,6 +21,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 -- Run go.nvim commands from the module root. go test/build must run inside the
 -- module (the dir tree with go.mod); if nvim's cwd is elsewhere (e.g. $HOME) the
 -- relative package path is rejected. Set a window-local cwd to the nearest go.mod.
+-- noautocmd: skip DirChanged, otherwise the Snacks explorer re-roots to the module dir.
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('go_module_cwd', { clear = true }),
   pattern = 'go',
@@ -28,6 +29,6 @@ vim.api.nvim_create_autocmd('FileType', {
     local fname = vim.api.nvim_buf_get_name(ev.buf)
     if fname == '' then return end
     local root = vim.fs.root(fname, 'go.mod')
-    if root and root ~= vim.fn.getcwd() then vim.cmd.lcd(vim.fn.fnameescape(root)) end
+    if root and root ~= vim.fn.getcwd() then vim.cmd { cmd = 'lcd', args = { vim.fn.fnameescape(root) }, mods = { noautocmd = true } } end
   end,
 })
